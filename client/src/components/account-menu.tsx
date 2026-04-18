@@ -1,9 +1,8 @@
 import { LogOut } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 export function AccountMenu() {
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout } = useAuth();
 
   if (!user) {
     return null;
@@ -23,14 +22,6 @@ export function AccountMenu() {
         </div>
       </div>
       <div className="mt-3 flex flex-col gap-2">
-        {isAdmin ? (
-          <Link
-            to="/admin"
-            className="rounded-lg px-2 py-2 text-sm font-semibold text-sky-600 transition hover:bg-sky-50"
-          >
-            Open admin dashboard
-          </Link>
-        ) : null}
         <button
           type="button"
           onClick={logout}

@@ -18,7 +18,6 @@ type AuthContextValue = {
   user: AppUser | null;
   loading: boolean;
   isAuthenticated: boolean;
-  isAdmin: boolean;
   login: (values: { email: string; password: string }) => Promise<void>;
   register: (values: {
     name: string;
@@ -78,7 +77,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
       user,
       loading,
       isAuthenticated: Boolean(user),
-      isAdmin: user?.role === "admin",
       login,
       register,
       logout

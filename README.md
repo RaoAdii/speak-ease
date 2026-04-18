@@ -8,7 +8,6 @@ This repository keeps the same Duolingo-clone product scope from the original pr
 - Backend: Express.js
 - Database: MongoDB + Mongoose
 - Auth: JWT-based email/password auth
-- Admin: React Admin against the Express API
 
 ## Structure
 
@@ -54,7 +53,6 @@ Copy-Item server/.env.example server/.env
 
 - `MONGO_URI`
 - `JWT_SECRET`
-- `ADMIN_EMAILS`
 
 5. Seed the MongoDB database:
 
@@ -89,7 +87,6 @@ npm run dev
 - Quests
 - Leaderboard
 - Shop
-- Admin CRUD for courses, units, lessons, challenges, and challenge options
 
 ## Notes
 

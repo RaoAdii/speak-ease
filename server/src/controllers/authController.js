@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import { User } from "../models/User.js";
 import { serializeUser } from "../services/userSerializer.js";
-import { isAdminEmail } from "../utils/admin.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { createToken } from "../utils/token.js";
 
@@ -34,7 +33,7 @@ export const register = asyncHandler(async (req, res) => {
     name,
     email,
     password: await bcrypt.hash(password, 10),
-    role: isAdminEmail(email) ? "admin" : "user"
+    role: "user"
   });
 
   res.status(201).json({
@@ -61,13 +60,6 @@ export const login = asyncHandler(async (req, res) => {
 
   if (!valid) {
     return res.status(401).json({ message: "Invalid email or password." });
-  }
-
-  const adminRole = isAdminEmail(user.email) ? "admin" : user.role;
-
-  if (user.role !== adminRole) {
-    user.role = adminRole;
-    await user.save();
   }
 
   res.json({

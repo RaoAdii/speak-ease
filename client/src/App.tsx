@@ -3,7 +3,7 @@ import { AuthLayout } from "@/layouts/AuthLayout";
 import { LessonLayout } from "@/layouts/LessonLayout";
 import { MainLayout } from "@/layouts/MainLayout";
 import { MarketingLayout } from "@/layouts/MarketingLayout";
-import { AdminRoute, GuestRoute, ProtectedRoute } from "@/routes/ProtectedRoute";
+import { GuestRoute, ProtectedRoute } from "@/routes/ProtectedRoute";
 import { SignInPage } from "@/pages/auth/SignInPage";
 import { SignUpPage } from "@/pages/auth/SignUpPage";
 import { MarketingPage } from "@/pages/marketing/MarketingPage";
@@ -13,7 +13,6 @@ import { LeaderboardPage } from "@/pages/LeaderboardPage";
 import { QuestsPage } from "@/pages/QuestsPage";
 import { ShopPage } from "@/pages/ShopPage";
 import { LessonPage } from "@/pages/LessonPage";
-import { AdminPage } from "@/pages/AdminPage";
 
 function MarketingShell() {
   return (
@@ -89,15 +88,6 @@ export default function App() {
         <Route path="/lesson" element={<LessonPage />} />
         <Route path="/lesson/:lessonId" element={<LessonPage />} />
       </Route>
-
-      <Route
-        path="/admin"
-        element={
-          <AdminRoute>
-            <AdminPage />
-          </AdminRoute>
-        }
-      />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

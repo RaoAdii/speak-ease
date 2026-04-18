@@ -12,7 +12,7 @@ export type AppUser = {
   name: string;
   email: string;
   imageSrc: string;
-  role: "user" | "admin";
+  role: "user";
   activeCourseId: number | null;
   hearts: number;
   points: number;
