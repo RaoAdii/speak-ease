@@ -3,46 +3,56 @@
 ## System Architecture (Frontend + Backend + Database)
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}}}%%
 flowchart TB
     %% Top layer: Web App (matches reference style)
     subgraph WEB_APP[Web App]
-        FE_AUTH[Authentication UI]
-        FE_LEARN[Learning UI]
-        FE_PROGRESS[Progress and Gamification UI]
+        FE_AUTH[Authentication<br/>UI]
+        FE_LEARN[Learning<br/>UI]
+        FE_PROGRESS[Progress and<br/>Gamification UI]
     end
 
     %% Middle layer: Backend services
     subgraph BACKEND_SERVICES[Backend Services]
-        API_GATEWAY[API Gateway Service<br/>Express App and Router]
-        AUTH_SERVICE[Authentication Service<br/>authController and authRoutes]
-        LEARNING_SERVICE[Learning Service<br/>courses units lessons challenges]
-        PROGRESS_SERVICE[Progress Service<br/>hearts points challenge progress]
-        LEADERBOARD_SERVICE[Leaderboard and Quests Service]
+        API_GATEWAY[API Gateway<br/>Service]
+        AUTH_SERVICE[Authentication<br/>Service]
+        LEARNING_SERVICE[Learning<br/>Service]
+        PROGRESS_SERVICE[Progress<br/>Service]
+        LEADERBOARD_SERVICE[Leaderboard and<br/>Quests Service]
     end
 
     %% Bottom-left layer: Third-party services
     subgraph THIRD_PARTY[Third-party Services]
-        JWT_SERVICE[JWT Service]
-        HASH_SERVICE[Password Hashing Service<br/>bcryptjs]
+        JWT_SERVICE[JWT<br/>Service]
+        HASH_SERVICE[Password Hashing<br/>Service]
     end
 
     %% Bottom-right layer: Databases
     subgraph DATABASES[Databases]
-        USER_DB[(User Collection)]
-        COURSE_DB[(Course Collection)]
-        UNIT_DB[(Unit Collection)]
-        LESSON_DB[(Lesson Collection)]
-        CHALLENGE_DB[(Challenge Collection)]
-        OPTION_DB[(ChallengeOption Collection)]
-        PROGRESS_DB[(ChallengeProgress Collection)]
-        COUNTER_DB[(Counter Collection)]
+        USER_DB[(User)]
+        COURSE_DB[(Course)]
+        UNIT_DB[(Unit)]
+        LESSON_DB[(Lesson)]
+        CHALLENGE_DB[(Challenge)]
+        OPTION_DB[(ChallengeOption)]
+        PROGRESS_DB[(ChallengeProgress)]
+        COUNTER_DB[(Counter)]
     end
 
     %% Utility box
     subgraph UTILITIES[Utility Layer]
-        ID_SEQUENCE[getNextSequence Utility]
-        SEED_SCRIPT[Database Seed Script]
+        ID_SEQUENCE[getNextSequence]
+        SEED_SCRIPT[Seed Script]
     end
+
+    %% Larger text across nodes and group titles
+    classDef nodeText font-size:22px,font-weight:600;
+    class FE_AUTH,FE_LEARN,FE_PROGRESS,API_GATEWAY,AUTH_SERVICE,LEARNING_SERVICE,PROGRESS_SERVICE,LEADERBOARD_SERVICE,JWT_SERVICE,HASH_SERVICE,USER_DB,COURSE_DB,UNIT_DB,LESSON_DB,CHALLENGE_DB,OPTION_DB,PROGRESS_DB,COUNTER_DB,ID_SEQUENCE,SEED_SCRIPT nodeText;
+    style WEB_APP font-size:24px
+    style BACKEND_SERVICES font-size:24px
+    style THIRD_PARTY font-size:24px
+    style DATABASES font-size:24px
+    style UTILITIES font-size:24px
 
     %% Web app to backend
     FE_AUTH --> API_GATEWAY
