@@ -3,62 +3,57 @@
 ## Mermaid ER Diagram (Photo Style)
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '24px' }, 'flowchart': { 'nodeSpacing': 22, 'rankSpacing': 30, 'curve': 'linear' } }}%%
-flowchart TB
-    %% Entities
-    E_COURSE[Course]
-    E_UNIT[Unit]
-    E_LESSON[Lesson]
-    E_CHALLENGE[Challenge]
-    E_OPTION[ChallengeOption]
-    E_USER[User]
-    E_PROGRESS[ChallengeProgress]
-    E_COUNTER[Counter]
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '32px'}}}%%
+flowchart LR
+    %% Compact Chen-style ERD matching the reference look
+    C["Course<br/> "]
+    U["Unit<br/> "]
+    L["Lesson<br/> "]
+    CH["Challenge<br/> "]
+    O["ChallengeOption<br/> "]
+    US["User<br/> "]
+    CP["ChallengeProgress<br/> "]
+    CT["Counter<br/> "]
 
-    %% Relationships
-    R_CU{Has}
-    R_UL{Has}
-    R_LC{Has}
-    R_CO{Has}
-    R_UP{Records}
-    R_CP{Tracks}
-    R_ACTIVE{ActiveIn}
-    R_SEQ{GeneratesIds}
+    R1{"Has<br/>"}
+    R2{"Has<br/>"}
+    R3{"Has<br/>"}
+    R4{"Has<br/>"}
+    R5{"Records<br/>"}
+    R6{"Tracks<br/>"}
+    R7{"ActiveIn<br/>"}
+    R8{"GeneratesId<br/>"}
 
-    %% Core links with cardinality
-    E_COURSE -->|1| R_CU -->|N| E_UNIT
-    E_UNIT -->|1| R_UL -->|N| E_LESSON
-    E_LESSON -->|1| R_LC -->|N| E_CHALLENGE
-    E_CHALLENGE -->|1| R_CO -->|N| E_OPTION
+    C -->|1| R1 -->|N| U
+    U -->|1| R2 -->|N| L
+    L -->|1| R3 -->|N| CH
+    CH -->|1| R4 -->|N| O
 
-    E_USER -->|1| R_UP -->|N| E_PROGRESS
-    E_CHALLENGE -->|1| R_CP -->|N| E_PROGRESS
-    E_COURSE -->|1| R_ACTIVE -->|0..N| E_USER
+    US -->|1| R5 -->|N| CP
+    CH -->|1| R6 -->|N| CP
+    C -->|1| R7 -->|0..N| US
 
-    E_COUNTER -->|1| R_SEQ
-    R_SEQ -->|N| E_COURSE
-    R_SEQ -->|N| E_UNIT
-    R_SEQ -->|N| E_LESSON
-    R_SEQ -->|N| E_CHALLENGE
-    R_SEQ -->|N| E_OPTION
+    CT -->|1| R8 -->|N| C
+    R8 -->|N| U
+    R8 -->|N| L
+    R8 -->|N| CH
+    R8 -->|N| O
 
-    %% Compact attribute set (for readability)
-    A_COURSE((id UK, title)) --- E_COURSE
-    A_UNIT((id UK, courseId FK, order)) --- E_UNIT
-    A_LESSON((id UK, unitId FK, order)) --- E_LESSON
-    A_CHALLENGE((id UK, lessonId FK, type, order)) --- E_CHALLENGE
-    A_OPTION((id UK, challengeId FK, correct)) --- E_OPTION
-    A_USER((email UK, activeCourseId FK, hearts, points)) --- E_USER
-    A_PROGRESS((userId FK, challengeId FK, completed)) --- E_PROGRESS
-    A_PROGRESS_U((UNIQUE userId + challengeId)) --- E_PROGRESS
-    A_COUNTER((key UK, value)) --- E_COUNTER
+    %% Grouped attributes (single oval per entity for compactness)
+    AC(( id UK, title, imageSrc )) --- C
+    AU(( id UK, courseId FK, title, order )) --- U
+    AL(( id UK, unitId FK, title, order )) --- L
+    ACH(( id UK, lessonId FK, type, question )) --- CH
+    AO(( id UK, challengeId FK, text, correct )) --- O
+    AUS(( email UK, activeCourseId FK, hearts, points )) --- US
+    ACP(( userId FK, challengeId FK, completed, unique pair )) --- CP
+    ACT(( key UK, value )) --- CT
 
-    %% Style similar to your image
-    classDef entity fill:#d89c3a,stroke:#8a6a1f,color:#111,stroke-width:1.2px;
-    classDef relation fill:#74251f,stroke:#4e1613,color:#fff,stroke-width:1.2px;
-    classDef attribute fill:#1d5a63,stroke:#103840,color:#fff,stroke-width:1.2px;
+    classDef entity fill:#d89c3a,stroke:#8a6a1f,color:#111,stroke-width:2px,font-size:32px,font-weight:bold;
+    classDef relation fill:#74251f,stroke:#4e1613,color:#fff,stroke-width:2px,font-size:32px,font-weight:bold;
+    classDef attribute fill:#1d5a63,stroke:#103840,color:#fff,stroke-width:2px,font-size:28px;
 
-    class E_COURSE,E_UNIT,E_LESSON,E_CHALLENGE,E_OPTION,E_USER,E_PROGRESS,E_COUNTER entity;
-    class R_CU,R_UL,R_LC,R_CO,R_UP,R_CP,R_ACTIVE,R_SEQ relation;
-    class A_COURSE,A_UNIT,A_LESSON,A_CHALLENGE,A_OPTION,A_USER,A_PROGRESS,A_PROGRESS_U,A_COUNTER attribute;
+    class C,U,L,CH,O,US,CP,CT entity;
+    class R1,R2,R3,R4,R5,R6,R7,R8 relation;
+    class AC,AU,AL,ACH,AO,AUS,ACP,ACT attribute;
 ```
