@@ -3,7 +3,7 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
-    "allowJs": false,
+    "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -14,15 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "next/image": ["src/shims/next-image.tsx"],
-      "next/link": ["src/shims/next-link.tsx"],
-      "next/navigation": ["src/shims/next-navigation.ts"]
-    }
+    "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src/**/*.{js,jsx}"],
   "references": []
 }

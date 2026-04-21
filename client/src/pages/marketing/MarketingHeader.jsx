@@ -1,0 +1,25 @@
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+export function MarketingHeader() {
+    const { isAuthenticated } = useAuth();
+    return (<header className="h-20 w-full border-b-2 border-slate-200 px-4">
+      <div className="mx-auto flex h-full items-center justify-between lg:max-w-screen-lg">
+        <Link href="/" className="flex items-center gap-x-3 pb-7 pl-4 pt-8">
+          <Image src="/mascot.svg" alt="Mascot" height={40} width={40}/>
+          <h1 className="text-2xl font-extrabold tracking-wide text-green-600">
+            Speak Ease
+          </h1>
+        </Link>
+
+        <div className="flex items-center gap-3">
+          {isAuthenticated ? (<Button size="lg" variant="secondary" asChild>
+              <Link href="/learn">Continue Learning</Link>
+            </Button>) : (<Button size="lg" variant="ghost" asChild>
+              <Link href="/sign-in">Login</Link>
+            </Button>)}
+        </div>
+      </div>
+    </header>);
+}
