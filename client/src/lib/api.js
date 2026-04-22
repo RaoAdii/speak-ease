@@ -52,6 +52,20 @@ export const api = {
     }),
     getLearnPage: () => request("/app/learn"),
     getLessonPage: (lessonId) => request(lessonId ? `/app/lesson/${lessonId}` : "/app/lesson"),
+    getQuizPage: () => request("/app/quiz"),
+    getQuizSession: (lessonId, options = {}) => {
+        const params = new URLSearchParams();
+        if (options.type)
+            params.set("type", options.type);
+        if (options.courseId)
+            params.set("courseId", String(options.courseId));
+        if (options.topic)
+            params.set("topic", options.topic);
+        if (options.n)
+            params.set("n", String(options.n));
+        const query = params.toString() ? `?${params.toString()}` : "";
+        return request(`/app/quiz/${lessonId}${query}`);
+    },
     getLeaderboardPage: () => request("/app/leaderboard"),
     getQuestsPage: () => request("/app/quests"),
     getShopPage: () => request("/app/shop"),

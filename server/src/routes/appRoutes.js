@@ -6,6 +6,8 @@ import {
   getLeaderboardPage,
   getLearnPage,
   getLessonPage,
+  getQuizPage,
+  getQuizSessionPage,
   getQuestsPage,
   getShopPage,
   refillUserHearts,
@@ -19,6 +21,8 @@ router.post("/courses/select", selectActiveCourse);
 router.get("/learn", getLearnPage);
 router.get("/lesson", getLessonPage);
 router.get("/lesson/:lessonId", getLessonPage);
+router.get("/quiz", getQuizPage);
+router.get("/quiz/:lessonId", getQuizSessionPage);
 router.get("/leaderboard", getLeaderboardPage);
 router.get("/quests", getQuestsPage);
 router.get("/shop", getShopPage);

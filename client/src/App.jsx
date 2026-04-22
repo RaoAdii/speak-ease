@@ -12,6 +12,8 @@ import { LearnPage } from "@/pages/LearnPage";
 import { LeaderboardPage } from "@/pages/LeaderboardPage";
 import { QuestsPage } from "@/pages/QuestsPage";
 import { ShopPage } from "@/pages/ShopPage";
+import { QuizPage } from "@/pages/QuizPage";
+import { QuizSessionPage } from "@/pages/QuizSessionPage";
 import { LessonPage } from "@/pages/LessonPage";
 function MarketingShell() {
     return (<MarketingLayout>
@@ -58,11 +60,13 @@ export default function App() {
         <Route path="/leaderboard" element={<LeaderboardPage />}/>
         <Route path="/quests" element={<QuestsPage />}/>
         <Route path="/shop" element={<ShopPage />}/>
+        <Route path="/quiz" element={<QuizPage />}/>
       </Route>
 
       <Route element={<LessonShell />}>
         <Route path="/lesson" element={<LessonPage />}/>
         <Route path="/lesson/:lessonId" element={<LessonPage />}/>
+        <Route path="/quiz/:lessonId" element={<QuizSessionPage />}/>
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace/>}/>

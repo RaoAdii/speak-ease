@@ -1,12 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
 import { useExitModal } from "@/store/use-exit-modal";
+
+function getExitRedirectPath(pathname) {
+    if (String(pathname || "").startsWith("/quiz/")) {
+        return "/quiz";
+    }
+    return "/learn";
+}
+
 export const ExitModal = () => {
     const router = useRouter();
+    const pathname = usePathname();
     const [isClient, setIsClient] = useState(false);
     const { isOpen, close } = useExitModal();
     useEffect(() => setIsClient(true), []);
@@ -36,7 +45,7 @@ export const ExitModal = () => {
 
             <Button variant="dangerOutline" className="w-full" size="lg" onClick={() => {
             close();
-            router.push("/learn");
+            router.push(getExitRedirectPath(pathname));
         }}>
               End session
             </Button>

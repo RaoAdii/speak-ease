@@ -14,7 +14,24 @@ import { Footer } from "./footer";
 import { Header } from "./header";
 import { QuestionBubble } from "./question-bubble";
 import { ResultCard } from "./result-card";
-export const Quiz = ({ initialPercentage, initialHearts, initialLessonId, initialLessonChallenges }) => {
+
+function normalizeAnswer(value) {
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
+}
+export const Quiz = ({
+    initialPercentage,
+    initialHearts,
+    initialLessonId,
+    initialLessonChallenges,
+    completedRedirectPath = "/learn",
+    labels = {},
+    completionMessage = "Session complete. Progress has been recorded.",
+}) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,35 +62,55 @@ export const Quiz = ({ initialPercentage, initialHearts, initialLessonId, initia
         return uncompletedIndex === -1 ? 0 : uncompletedIndex;
     });
     const [selectedOption, setSelectedOption] = useState();
+    const [shortAnswer, setShortAnswer] = useState("");
     const [status, setStatus] = useState("none");
     const challenge = challenges[activeIndex];
+    const questionFormat = challenge?.questionFormat || "MCQ";
+    const isShortAnswerQuestion = questionFormat === "SHORT_ANSWER";
     const options = challenge?.challengeOptions ?? [];
     const onNext = () => {
         setActiveIndex((current) => current + 1);
     };
     const onSelect = (id) => {
+        if (isShortAnswerQuestion)
+            return;
         if (status !== "none")
             return;
         setSelectedOption(id);
     };
     const onContinue = () => {
-        if (!selectedOption)
+        if (isShortAnswerQuestion) {
+            if (!shortAnswer.trim())
+                return;
+        }
+        else if (!selectedOption) {
             return;
+        }
         if (status === "wrong") {
             setStatus("none");
             setSelectedOption(undefined);
+            if (isShortAnswerQuestion) {
+                setShortAnswer("");
+            }
             return;
         }
         if (status === "correct") {
             onNext();
             setStatus("none");
             setSelectedOption(undefined);
+            setShortAnswer("");
             return;
         }
         const correctOption = options.find((option) => option.correct);
-        if (!correctOption)
+        const expectedAnswer = challenge?.expectedAnswer || "";
+        const providedAnswer = shortAnswer;
+        const isShortAnswerCorrect =
+            normalizeAnswer(expectedAnswer) === normalizeAnswer(providedAnswer);
+        const isMcqCorrect = Boolean(correctOption && correctOption.id === selectedOption);
+        const isCorrect = isShortAnswerQuestion ? isShortAnswerCorrect : isMcqCorrect;
+        if (!isShortAnswerQuestion && !correctOption)
             return;
-        if (correctOption.id === selectedOption) {
+        if (isCorrect) {
             startTransition(() => {
                 api
                     .completeChallenge(challenge.id)
@@ -120,9 +157,9 @@ export const Quiz = ({ initialPercentage, initialHearts, initialLessonId, initia
 
           <Image src="/finish.svg" alt="Finish" className="block lg:hidden" height={100} width={100}/>
 
-          <h1 className="text-lg font-bold text-neutral-700 lg:text-3xl">
-            Great job! <br /> You&apos;ve completed the lesson.
-          </h1>
+                    <h1 className="text-lg font-bold text-neutral-700 lg:text-3xl">
+                        {completionMessage}
+                    </h1>
 
           <div className="flex w-full items-center gap-x-4">
             <ResultCard variant="points" value={challenges.length * 10}/>
@@ -130,18 +167,16 @@ export const Quiz = ({ initialPercentage, initialHearts, initialLessonId, initia
           </div>
         </div>
 
-        <Footer lessonId={lessonId} status="completed" onCheck={() => router.push("/learn")}/>
+                <Footer lessonId={lessonId} status="completed" labels={labels} onCheck={() => router.push(completedRedirectPath)}/>
       </>);
     }
-    const title = challenge.type === "ASSIST"
-        ? "Select the correct meaning"
-        : challenge.question;
+        const title = challenge.question;
     return (<>
       {incorrectAudio}
       {correctAudio}
       <Header hearts={hearts} percentage={percentage}/>
 
-      <div className="flex-1">
+        <div className="flex-1">
         <div className="flex h-full items-center justify-center">
           <div className="flex w-full flex-col gap-y-12 px-6 lg:min-h-[350px] lg:w-[600px] lg:px-0">
             <h1 className="text-center text-lg font-bold text-neutral-700 lg:text-start lg:text-3xl">
@@ -149,14 +184,17 @@ export const Quiz = ({ initialPercentage, initialHearts, initialLessonId, initia
             </h1>
 
             <div>
-              {challenge.type === "ASSIST" && (<QuestionBubble question={challenge.question}/>)}
+              {challenge.type === "ASSIST" && !isShortAnswerQuestion && (<QuestionBubble question={challenge.question}/>)}
 
-              <Challenge options={options} onSelect={onSelect} status={status} selectedOption={selectedOption} disabled={pending} type={challenge.type}/>
+                            {isShortAnswerQuestion ? (<div className="rounded-xl border-2 p-4 lg:p-6">
+                                <input type="text" value={shortAnswer} onChange={(event) => setShortAnswer(event.target.value)} placeholder="Type your answer here" disabled={pending} className="h-12 w-full rounded-xl border-2 px-4 text-base outline-none focus:border-sky-300"/>
+                            </div>) : (<Challenge options={options} onSelect={onSelect} status={status} selectedOption={selectedOption} disabled={pending} type={challenge.type}/>)}
             </div>
           </div>
         </div>
       </div>
 
-      <Footer disabled={pending || !selectedOption} status={status} onCheck={onContinue}/>
+            <Footer disabled={pending ||
+            (isShortAnswerQuestion ? !shortAnswer.trim() : !selectedOption)} status={status} labels={labels} onCheck={onContinue}/>
     </>);
 };

@@ -8,9 +8,37 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 
 const app = express();
 
+const configuredOrigins = (env.clientUrl || "")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+function isAllowedOrigin(origin) {
+  if (!origin) {
+    return true;
+  }
+
+  if (configuredOrigins.includes(origin)) {
+    return true;
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+  }
+
+  return false;
+}
+
 app.use(
   cors({
-    origin: env.clientUrl,
+    origin(origin, callback) {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Origin is not allowed by CORS."));
+    },
     credentials: true,
     exposedHeaders: ["Content-Range"]
   })

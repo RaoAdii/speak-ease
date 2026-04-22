@@ -17,6 +17,7 @@ export const Sidebar = ({ className }) => {
 
       <div className="flex flex-1 flex-col gap-y-2">
         <SidebarItem label="Learn" href="/learn" iconSrc="/learn.svg"/>
+        <SidebarItem label="Quiz" href="/quiz" iconSrc="/quiz.svg"/>
         <SidebarItem label="Leaderboard" href="/leaderboard" iconSrc="/leaderboard.svg"/>
         <SidebarItem label="Quests" href="/quests" iconSrc="/quests.svg"/>
         <SidebarItem label="Shop" href="/shop" iconSrc="/shop.svg"/>
